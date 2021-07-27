@@ -1,0 +1,21 @@
+body{
+    background-image: url("jason-dent-SnXIF8_2oPw-unsplash.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: Script;
+    color: #BFBFBF;
+}
+
+.header{
+    font-size: 45px;
+    letter-spacing: 4px;
+    word-spacing: 25px;
+    padding-left: 2rem;
+    padding-top: 5rem;
+    padding-bottom: 2rem;
+}
+
+.nav-link{
+    padding-left: 3rem;
+    color:#7e7b7b;
+}
