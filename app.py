@@ -83,6 +83,35 @@ def create_app():
           'message': 'Failed to create new movie'
         })
 
+  @app.route('/movies/<id>', methods=['GET','PATCH'])
+  # add permission
+  # @requires_auth('patch:movies')
+  def edit_movies(id):
+      data = request.get_json()
+      movie = Movies.query.filter(Movies.id == id).one_or_none()
+      # it should respond with a 404 error if <id> is not found
+      if not movie:
+          abort(404)
+      try:
+        movie.name = data['name']
+        movie.release_date = data['release_date']
+        movie.genres = data['genres']
+
+        movie.update()
+
+        return jsonify({
+            'success': True,
+            'movie': [movie.format()]
+        }), 200
+
+      except:
+        raise
+        return jsonify({
+            'success': False,
+            'message': 'An error occured'
+        }), 500
+
+
 
 
   @app.route('/actors', methods=['GET'], endpoint='actors')
@@ -127,6 +156,34 @@ def create_app():
           'success': False,
           'message': 'Failed to create new movie'
         })
+
+  @app.route('/actors/<id>', methods=['GET','PATCH'])
+  # add permission
+  # @requires_auth('patch:actors')
+  def edit_actors(id):
+      data = request.get_json()
+      actor = Actors.query.filter(Actors.id == id).one_or_none()
+      # it should respond with a 404 error if <id> is not found
+      if not actor:
+          abort(404)
+      try:
+        actor.name = data['name']
+        actor.age = data['age']
+        actor.gender = data['gender']
+
+        actor.update()
+
+        return jsonify({
+            'success': True,
+            'actor': [actor.format()]
+        }), 200
+
+      except:
+        raise
+        return jsonify({
+            'success': False,
+            'message': 'An error occured'
+        }), 500
 
 
   return app
