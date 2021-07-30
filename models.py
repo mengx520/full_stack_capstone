@@ -38,7 +38,8 @@ class Movies(db.Model):
             'genres': self.genres
         }
 
-    # TODO relationships
+    # create many to many relationship one movie can have many roles
+    roles = db.relationship('Roles', backref='movies')
 
 class Actors(db.Model):
     __tablename__ = 'actors'
@@ -47,7 +48,6 @@ class Actors(db.Model):
     age = db.Column(db.Integer(), nullable=False)
     gender = db.Column(db.String(120), nullable=False)
 
-    # TODO relationships
 
     def insert(self):
         db.session.add(self)
@@ -67,3 +67,21 @@ class Actors(db.Model):
             'age': self.age,
             'gender': self.gender
         }   
+
+class Roles(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    actor_id = db.Column(db.Integer, db.ForeignKey('actors.id'))
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'))
+    role_name = db.Column(db.String(120), nullable=False)
+
+    # create relationship between artist and show, one artist to many shows
+    actor = db.relationship('Actors', backref='roles')
+
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()

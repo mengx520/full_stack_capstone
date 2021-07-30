@@ -4,10 +4,12 @@ from sqlalchemy.sql.operators import endswith_op
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
+from .auth import AuthError, requires_auth
+from .models import db, migrate, Movies, Actors
+from .config import CastingAgencyConfig
+
 def create_app():
   # create and configure the app
-  from .models import db, migrate, Movies, Actors
-  from .config import CastingAgencyConfig
 
 
   app = Flask(__name__)
@@ -41,22 +43,23 @@ def create_app():
   implement endpoint
   '''
   @app.route('/movies', methods=['GET'], endpoint='get_movies')
-  # TODO ADD AUTH0
+  @requires_auth('get:movies')
 
-  def get_movies():
+  def get_movies(payload):
     try:
       movies = Movies.query.all()
       return jsonify({
         'success': True,
         'movies': [movie.format() for movie in movies]
       }), 200
-    except: 
+    except:
       return jsonify({
         'success': False,
         'message': 'An error occured'
       }), 500
 
   @app.route('/movies', methods=['POST'], endpoint='create_movies')
+  @requires_auth('post:movies')
 
   def create_movie():
       body = request.get_json()
@@ -77,16 +80,14 @@ def create_app():
           'total_movies': Movies.query.count()
         }), 200
       except:
-        raise
         return jsonify({
           'success': False,
           'message': 'Failed to create new movie'
         })
 
   @app.route('/movies/<id>', methods=['GET','PATCH'])
-  # add permission
-  # @requires_auth('patch:movies')
-  def edit_movies(id):
+  @requires_auth('patch:movies')
+  def edit_movies(payload, id):
       data = request.get_json()
       movie = Movies.query.filter(Movies.id == id).one_or_none()
       # it should respond with a 404 error if <id> is not found
@@ -105,14 +106,14 @@ def create_app():
         }), 200
 
       except:
-        raise
         return jsonify({
             'success': False,
             'message': 'An error occured'
         }), 500
 
   @app.route('/movies/<id>', methods=['DELETE'])
-  def delete_movies(id):
+  @requires_auth('delete:movies')
+  def delete_movies(payload, id):
     try:
       movie = Movies.query.filter(
           Movies.id == id).one_or_none()
@@ -128,11 +129,11 @@ def create_app():
           'total_movies': Movies.query.count()
       })
     except:
-        abort(422)
+      abort(422)
 
 
   @app.route('/actors', methods=['GET'], endpoint='actors')
-  # TODO ADD AUTH0
+  @requires_auth('get:actors')
 
   def get_actors():
     try:
@@ -148,6 +149,7 @@ def create_app():
       }), 500
 
   @app.route('/actors', methods=['POST'], endpoint='create_actors')
+  @requires_auth('post:actors')
 
   def create_actor():
       body = request.get_json()
@@ -168,15 +170,13 @@ def create_app():
           'total_actors': Actors.query.count()
         }), 200
       except:
-        raise
         return jsonify({
           'success': False,
           'message': 'Failed to create new movie'
         })
 
   @app.route('/actors/<id>', methods=['GET','PATCH'])
-  # add permission
-  # @requires_auth('patch:actors')
+  @requires_auth('patch:actors')
   def edit_actors(id):
       data = request.get_json()
       actor = Actors.query.filter(Actors.id == id).one_or_none()
@@ -196,13 +196,13 @@ def create_app():
         }), 200
 
       except:
-        raise
         return jsonify({
             'success': False,
             'message': 'An error occured'
         }), 500
 
   @app.route('/actors/<id>', methods=['DELETE'])
+  @requires_auth('delete:actors')
   def delete_actors(id):
     try:
       actor = Actors.query.filter(
@@ -220,6 +220,8 @@ def create_app():
       })
     except:
         abort(422)
+  
+
 
 
   return app
