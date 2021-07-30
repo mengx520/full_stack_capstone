@@ -19,6 +19,25 @@ class Movies(db.Model):
     release_date = db.Column(db.DateTime, nullable=False)
     genres = db.Column(db.String(500), nullable=False)
 
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'release_date': self.release_date,
+            'genres': self.genres
+        }
+
     # TODO relationships
 
 class Actors(db.Model):
@@ -29,3 +48,22 @@ class Actors(db.Model):
     gender = db.Column(db.String(120), nullable=False)
 
     # TODO relationships
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'age': self.age,
+            'gender': self.gender
+        }   
