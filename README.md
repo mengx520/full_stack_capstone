@@ -67,6 +67,12 @@ export FLASK_ENV=development # enables debug mode
 flask run
 ```
 
+**5. Testing**
+```
+createdb test_casting_agency
+psql test_casting_agency < test_casting_agency.psql
+```
+
 
 ### Frontend Dependencies
 The frontend is using HTML, CSS, and Javascript with Bootstrap 3(https://getbootstrap.com/docs/3.4/customize/). All frontend dependencies are installed in static/, there is no need to install additional files locally.

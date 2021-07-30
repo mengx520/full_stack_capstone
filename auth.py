@@ -1,5 +1,6 @@
 from os import environ
 import json
+import os
 from flask import request, _request_ctx_stack, abort
 from functools import wraps
 from jose import jwt
@@ -143,8 +144,11 @@ def requires_auth(permission=''):
         @wraps(f)
         def wrapper(*args, **kwargs):
             token = get_token_auth_header()
-            try: 
+            try:
+                # if "UNITTEST" not in os.environ:
                 payload = verify_decode_jwt(token)
+                # else:
+                # payload = {}
             except:
                 abort(401)
 

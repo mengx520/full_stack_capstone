@@ -173,7 +173,7 @@ def create_app():
         return jsonify({
           'success': False,
           'message': 'Failed to create new movie'
-        })
+        }),500
 
   @app.route('/actors/<id>', methods=['GET','PATCH'])
   @requires_auth('patch:actors')
