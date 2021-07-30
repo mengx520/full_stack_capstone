@@ -61,7 +61,7 @@ def create_app():
   @app.route('/movies', methods=['POST'], endpoint='create_movies')
   @requires_auth('post:movies')
 
-  def create_movie():
+  def create_movie(payload):
       body = request.get_json()
       if body == {}:
         abort(422)
@@ -135,7 +135,7 @@ def create_app():
   @app.route('/actors', methods=['GET'], endpoint='actors')
   @requires_auth('get:actors')
 
-  def get_actors():
+  def get_actors(payload):
     try:
       actors = Actors.query.all()
       return jsonify({
@@ -151,7 +151,7 @@ def create_app():
   @app.route('/actors', methods=['POST'], endpoint='create_actors')
   @requires_auth('post:actors')
 
-  def create_actor():
+  def create_actor(payload):
       body = request.get_json()
       if body == {}:
         abort(422)
@@ -177,7 +177,7 @@ def create_app():
 
   @app.route('/actors/<id>', methods=['GET','PATCH'])
   @requires_auth('patch:actors')
-  def edit_actors(id):
+  def edit_actors(payload, id):
       data = request.get_json()
       actor = Actors.query.filter(Actors.id == id).one_or_none()
       # it should respond with a 404 error if <id> is not found
@@ -203,7 +203,7 @@ def create_app():
 
   @app.route('/actors/<id>', methods=['DELETE'])
   @requires_auth('delete:actors')
-  def delete_actors(id):
+  def delete_actors(payload, id):
     try:
       actor = Actors.query.filter(
           Actors.id == id).one_or_none()
