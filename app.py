@@ -111,7 +111,24 @@ def create_app():
             'message': 'An error occured'
         }), 500
 
+  @app.route('/movies/<id>', methods=['DELETE'])
+  def delete_movies(id):
+    try:
+      movie = Movies.query.filter(
+          Movies.id == id).one_or_none()
 
+      if movie is None:
+          abort(404)
+
+      movie.delete()
+
+      return jsonify({
+          'success': True,
+          'deleted': movie.id,
+          'total_movies': Movies.query.count()
+      })
+    except:
+        abort(422)
 
 
   @app.route('/actors', methods=['GET'], endpoint='actors')
@@ -184,6 +201,25 @@ def create_app():
             'success': False,
             'message': 'An error occured'
         }), 500
+
+  @app.route('/actors/<id>', methods=['DELETE'])
+  def delete_actors(id):
+    try:
+      actor = Actors.query.filter(
+          Actors.id == id).one_or_none()
+
+      if actor is None:
+          abort(404)
+
+      actor.delete()
+
+      return jsonify({
+          'success': True,
+          'deleted': actor.id,
+          'total_actors': Actors.query.count()
+      })
+    except:
+        abort(422)
 
 
   return app
