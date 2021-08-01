@@ -83,7 +83,7 @@ The frontend is using HTML, CSS, and Javascript with Bootstrap 3(https://getboot
 
 ### Project Host
 - Heroku: [#TODO]
-- Localhost: [https://localhost:5000/]
+- Localhost: [https://localhost:5000/](https://localhost:5000/)
 
 ### Roles and Permissions
 - Roles:
