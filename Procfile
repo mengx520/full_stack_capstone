@@ -1,1 +1,1 @@
-web: gunicorn app:casting_agency.app
+web: gunicorn casting_agency:app
