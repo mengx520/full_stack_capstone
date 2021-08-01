@@ -92,9 +92,12 @@ def create_app():
         if not movie:
             abort(404)
         try:
-            movie.name = data['name']
-            movie.release_date = data['release_date']
-            movie.genres = data['genres']
+            if 'name' in data:
+              movie.name = data['name']
+            if 'release_date' in data:
+              movie.release_date = data['release_date']
+            if 'genres' in data:
+              movie.genres = data['genres']
 
             movie.update()
 
@@ -180,9 +183,12 @@ def create_app():
         if not actor:
             abort(404)
         try:
-            actor.name = data['name']
-            actor.age = data['age']
-            actor.gender = data['gender']
+            if 'name' in data:
+              actor.name = data['name']
+            if 'age' in data:
+              actor.age = data['age']
+            if 'gender' in data:
+              actor.gender = data['gender']
 
             actor.update()
 

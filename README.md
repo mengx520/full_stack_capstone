@@ -154,7 +154,7 @@ GET `'/actors'`
 
 POST `'/movies'`
 * Create a new movie using json parameter with all three required information
-* Roles Permission: Executive producer
+* Roles permission: Executive Producer
 * Sample response: `curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" -d '{"name": "Up!", "release_date": "2021-06-01", "genres": "Animation"}' http://127.0.0.1:5000/movies`
 ```
 {
@@ -165,7 +165,7 @@ POST `'/movies'`
 ```
 POST `'/actors'`
 * Create a new actor using json parameter with all three required information
-* Roles Permission: Casting Director, Executive producer
+* Roles permission: Casting Director, Executive Producer
 * Sample response: `curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" -d '{"age":18, "gender":"Female", "name":"Anna"}' http://127.0.0.1:5000/actors`
 ```
 {
@@ -175,3 +175,77 @@ POST `'/actors'`
 }
 ```
 
+PATCH `'/movies/<id>`
+* Edit a movie using json parameter 
+* Roles permission: Casting Director, Executive Producer
+* Sample response: `curl -X PATCH http://127.0.0.1:5000/movies/1 -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" -d '{"name": "WALLE"}'`
+```
+{
+  "movie": [
+    {
+      "genres": "Animation", 
+      "id": 1, 
+      "name": "WALLE", 
+      "release_date": "Wed, 18 Jun 2008 00:00:00 GMT"
+    }
+  ], 
+  "success": true
+}
+```
+
+PATCH `'/actors/<id>`
+* Edit a actor using json parameter 
+* Roles permission: Casting Director, Executive Producer
+* Sample response: `curl -X PATCH http://127.0.0.1:5000/actors/1 -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" -d '{"name": "Ryan", "age":22}'`
+```
+{
+  "actor": [
+    {
+      "age": 22, 
+      "gender": "Male", 
+      "id": 1, 
+      "name": "Ryan"
+    }
+  ], 
+  "success": true
+}
+```
+
+DELETE `'/movies/1`
+* DELETE a movie by providing id
+* Roles permission: Executive Producer
+* Sample response: `curl -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" -X DELETE http://127.0.0.1:5000/movies/1`
+```
+{
+  "deleted": 1, 
+  "success": true, 
+  "total_movies": 6
+}
+```
+
+DELETE `'/actors/1`
+* DELETE a actors by providing id
+* Roles permission: Casting Director, Executive Producer
+* Sample response: `curl -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkxCQmh2OTI4OEZRT0NhTmllZnRBRCJ9.eyJpc3MiOiJodHRwczovL3hpYW9oYW4udXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYxMDNhMTA1MGY4NjY0MDA2OTJiZDg5ZiIsImF1ZCI6ImNhc3RpbmdfYWdlbmN5IiwiaWF0IjoxNjI3Nzk0NDczLCJleHAiOjE2Mjc4ODA4NzMsImF6cCI6Ilk5RnF2Wkt2N1hGOEVRd05jdW53OHQxSUpJUDQ3UUQ5Iiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6YWN0b3JzIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyJdfQ.y1sgmm7NZuatxlFAr6S8d_vdOjP2ohTFxaVQxrMCKg7RvZP5XlMU1veMNIUMMmUWkrZhvsvAsfihQWwCHD4zpFydyOGGXSjE7O5V1g_pABGNQxf4OHWOccTGUXzQpXvCq0YWiHuCtxKToTJRm__WKbfSdgR1btpINvLK_vgdMlY-aIGj6gJ6DYub61ZANtWRll_Pc0nE4SNuq1PiFZkcXRKDPLppurdWJIcM-jK3AC_tLl4XIztq74s8bXLIl3HhPEDhRldLf0YxUif-ozgQB7Mz6uTiIqyoSFyq5p5ksa-W4Bb7L7JzDwfBunBn72W528y_MoYjJIF8V2JnGhvw8Q" -X DELETE http://127.0.0.1:5000/actors/5`
+```
+{
+  "deleted": 5, 
+  "success": true, 
+  "total_actors": 2
+}
+```
+
+### Error Handling
+Errors are returned in the following json format:
+```
+{
+    "success": False,
+    "error": 404,
+    "message": "resource not found"
+}
+```
+The API returns 4 types of errors:
+* 400: bad request
+* 404: not found
+* 422: unprocessable
+* 500: internal server error
