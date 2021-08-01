@@ -161,10 +161,7 @@ def requires_auth(permission=''):
         def wrapper(*args, **kwargs):
             token = get_token_auth_header()
             try:
-                # if "UNITTEST" not in os.environ:
                 payload = verify_decode_jwt(token)
-                # else:
-                # payload = {}
             except BaseException:
                 abort(401)
 
