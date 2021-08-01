@@ -19,6 +19,12 @@ def create_app(test_config=None):
     else:
         app.config.from_object(CastingAgencyConfig)
 
+    # this is a workaround for heroku passing the incorrect DB string
+    # https://help.heroku.com/ZKNTJQSK/why-is-sqlalchemy-1-4-x-not-connecting-to-heroku-postgres
+    db_uri = app.config['SQLALCHEMY_DATABASE_URI']
+    if db_uri.startswith('postgres://'):
+        app.config['SQLALCHEMY_DATABASE_URI'] = db_uri.replace("postgres://", "postgresql://", 1)
+
     db.init_app(app)
     migrate.init_app(app, db)
 
