@@ -122,6 +122,22 @@ Get `'/movies'`
 }
 ```
 
+GET `'/movies/id'`
+* Fetch a movie by id
+* Roles Permission: Public to all three roles
+* Sample response: `curl -H "Authorization: Bearer <TOKEN>" http://127.0.0.1:5000/movies/11`
+```
+{
+  "movie": {
+    "genres": "Drama",
+    "id": 11,
+    "name": "Test",
+    "release_date": "Tue, 17 Jun 2008 00:00:00 GMT"
+  },
+  "success": true
+}
+```
+
 GET `'/actors'`
 * Fetch all the actors 
 * Roles Permission: Public to all three roles
@@ -149,6 +165,22 @@ GET `'/actors'`
         }
     ],
     "success": true
+}
+```
+
+GET `'/actors/id'`
+* Fetch an actor by id
+* Roles Permission: Public to all three roles
+* Sample response: `curl -H "Authorization: Bearer <TOKEN>" http://127.0.0.1:5000/actors/1`
+```
+{
+  "actor": {
+    "age": 22,
+    "gender": "Male",
+    "id": 1,
+    "name": "Ryan"
+  },
+  "success": true
 }
 ```
 
@@ -183,12 +215,12 @@ PATCH `'/movies/<id>`
 {
   "movie": [
     {
-      "genres": "Animation", 
-      "id": 1, 
-      "name": "WALLE", 
+      "genres": "Animation",
+      "id": 1,
+      "name": "WALLE",
       "release_date": "Wed, 18 Jun 2008 00:00:00 GMT"
     }
-  ], 
+  ],
   "success": true
 }
 ```
@@ -217,8 +249,8 @@ DELETE `'/movies/1`
 * Sample response: `curl -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" -X DELETE http://127.0.0.1:5000/movies/1`
 ```
 {
-  "deleted": 1, 
-  "success": true, 
+  "deleted": 1,
+  "success": true,
   "total_movies": 6
 }
 ```
