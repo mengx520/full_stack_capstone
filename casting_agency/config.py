@@ -7,5 +7,5 @@ class CastingAgencyConfig:
     basedir = os.path.abspath(os.path.dirname(__file__))
 
     # Connect to the database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DB_STRING')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
