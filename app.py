@@ -1,19 +1,23 @@
 import os
+import datetime
 from flask import Flask, json, render_template, request, abort, jsonify
 from sqlalchemy.sql.operators import endswith_op
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-from .auth import AuthError, requires_auth
-from .models import db, migrate, Movies, Actors
-from .config import CastingAgencyConfig
+from auth import AuthError, requires_auth
+from models import db, migrate, Movies, Actors
+from config import CastingAgencyConfig
 
 
-def create_app():
+def create_app(test_config=None):
     # create and configure the app
-
     app = Flask(__name__)
-    app.config.from_object(CastingAgencyConfig)
+
+    if test_config:
+        app.config.update(test_config)
+    else:
+        app.config.from_object(CastingAgencyConfig)
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -21,8 +25,8 @@ def create_app():
     CORS(app)
 
     '''
-  Use the after_request decorator to set Access-Control-Allow
-  '''
+    Use the after_request decorator to set Access-Control-Allow
+    '''
     @app.after_request
     def after_request(response):
         response.headers.add('Access-Control-Allow-Headers',
@@ -37,8 +41,8 @@ def create_app():
         return render_template('index.html')
 
     '''
-  implement endpoint
-  '''
+    implement endpoint
+    '''
     @app.route('/movies', methods=['GET'], endpoint='get_movies')
     @requires_auth('get:movies')
     def get_movies(payload):
@@ -54,6 +58,19 @@ def create_app():
                 'message': 'An error occured'
             }), 500
 
+    @app.route('/movies/<id>', methods=['GET'])
+    @requires_auth('get:movies')
+    def get_movie(payload, id):
+        movie = Movies.query.filter(Movies.id == id).one_or_none()
+        # it should respond with a 404 error if <id> is not found
+        if not movie:
+            abort(404)
+        else:
+            return jsonify({
+                'success': True,
+                'movie': movie.format()
+            }), 200
+
     @app.route('/movies', methods=['POST'], endpoint='create_movies')
     @requires_auth('post:movies')
     def create_movie(payload):
@@ -62,7 +79,8 @@ def create_app():
             abort(422)
 
         new_name = body.get('name')
-        new_release_date = body.get('release_date')
+        new_release_date = datetime.date.fromisoformat(
+            body.get('release_date'))
         new_genres = body.get('genres')
 
         try:
@@ -83,7 +101,7 @@ def create_app():
                 'message': 'Failed to create new movie'
             })
 
-    @app.route('/movies/<id>', methods=['GET', 'PATCH'])
+    @app.route('/movies/<id>', methods=['PATCH'])
     @requires_auth('patch:movies')
     def edit_movies(payload, id):
         data = request.get_json()
@@ -93,11 +111,11 @@ def create_app():
             abort(404)
         try:
             if 'name' in data:
-              movie.name = data['name']
+                movie.name = data['name']
             if 'release_date' in data:
-              movie.release_date = data['release_date']
+                movie.release_date = data['release_date']
             if 'genres' in data:
-              movie.genres = data['genres']
+                movie.genres = data['genres']
 
             movie.update()
 
@@ -107,7 +125,6 @@ def create_app():
             }), 200
 
         except BaseException:
-            raise
             return jsonify({
                 'success': False,
                 'message': 'An error occured'
@@ -121,7 +138,9 @@ def create_app():
                 Movies.id == id).one_or_none()
 
             if movie is None:
-                abort(404)
+                return jsonify({
+                    'success': False,
+                }), 404
 
             movie.delete()
 
@@ -147,6 +166,19 @@ def create_app():
                 'success': False,
                 'message': 'An error occured'
             }), 500
+
+    @app.route('/actors/<id>', methods=['GET'])
+    @requires_auth('get:actors')
+    def get_actor(payload, id):
+        actor = Actors.query.filter(Actors.id == id).one_or_none()
+        # it should respond with a 404 error if <id> is not found
+        if not actor:
+            abort(404)
+        else:
+            return jsonify({
+                'success': True,
+                'actor': actor.format()
+            }), 200
 
     @app.route('/actors', methods=['POST'], endpoint='create_actors')
     @requires_auth('post:actors')
@@ -184,11 +216,11 @@ def create_app():
             abort(404)
         try:
             if 'name' in data:
-              actor.name = data['name']
+                actor.name = data['name']
             if 'age' in data:
-              actor.age = data['age']
+                actor.age = data['age']
             if 'gender' in data:
-              actor.gender = data['gender']
+                actor.gender = data['gender']
 
             actor.update()
 
@@ -211,15 +243,17 @@ def create_app():
                 Actors.id == id).one_or_none()
 
             if actor is None:
-                abort(404)
+                return jsonify({
+                    'success': False
+                }), 404
 
             actor.delete()
 
             return jsonify({
                 'success': True,
-                'deleted': actor.id,
+                'deleted': id,
                 'total_actors': Actors.query.count()
-            })
+            }), 200
         except BaseException:
             abort(422)
 
