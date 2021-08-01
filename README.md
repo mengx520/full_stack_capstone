@@ -122,3 +122,56 @@ Get `'/movies'`
 }
 ```
 
+GET `'/actors'`
+* Fetch all the actors 
+* Roles Permission: Public to all three roles
+* Sample response: `curl -H "Authorization: Bearer <Token>" http://127.0.0.1:5000/actors`
+```
+{
+    "actors": [
+        {
+            "age": 73,
+            "gender": "Male",
+            "id": 1,
+            "name": "Ben Burtt"
+        },
+        {
+            "age": 30,
+            "gender": "Female",
+            "id": 3,
+            "name": "Emma"
+        },
+        {
+            "age": 20,
+            "gender": "Female",
+            "id": 5,
+            "name": "Test"
+        }
+    ],
+    "success": true
+}
+```
+
+POST `'/movies'`
+* Create a new movie using json parameter with all three required information
+* Roles Permission: Executive producer
+* Sample response: `curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" -d '{"name": "Up!", "release_date": "2021-06-01", "genres": "Animation"}' http://127.0.0.1:5000/movies`
+```
+{
+    "created": "Up!",
+    "success": true,
+    "total_movies": 6
+}
+```
+POST `'/actors'`
+* Create a new actor using json parameter with all three required information
+* Roles Permission: Casting Director, Executive producer
+* Sample response: `curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" -d '{"age":18, "gender":"Female", "name":"Anna"}' http://127.0.0.1:5000/actors`
+```
+{
+  "created": "Anna", 
+  "success": true, 
+  "total_actors": 7
+}
+```
+

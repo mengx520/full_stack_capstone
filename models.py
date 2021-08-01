@@ -22,7 +22,7 @@ class Movies(db.Model):
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def update(self):
         db.session.commit()
 
@@ -41,6 +41,7 @@ class Movies(db.Model):
     # create many to many relationship one movie can have many roles
     roles = db.relationship('Roles', backref='movies')
 
+
 class Actors(db.Model):
     __tablename__ = 'actors'
     id = db.Column(db.Integer, primary_key=True)
@@ -48,11 +49,10 @@ class Actors(db.Model):
     age = db.Column(db.Integer(), nullable=False)
     gender = db.Column(db.String(120), nullable=False)
 
-
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def update(self):
         db.session.commit()
 
@@ -66,7 +66,8 @@ class Actors(db.Model):
             'name': self.name,
             'age': self.age,
             'gender': self.gender
-        }   
+        }
+
 
 class Roles(db.Model):
     __tablename__ = 'roles'

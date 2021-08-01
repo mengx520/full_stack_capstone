@@ -11,19 +11,24 @@ AUTH0_DOMAIN = 'xiaohan.us.auth0.com'
 API_AUDIENCE = 'casting_agency'
 ALGORITHMS = ["RS256"]
 
-## AuthError Exception
+# AuthError Exception
 '''
 AuthError Exception
 A standardized way to communicate auth failure modes
 '''
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
+
 '''
 implement get_token_auth_header() method
 '''
+
+
 def get_token_auth_header():
     """Obtains the Access Token from the Authorization Header
     https://auth0.com/docs/quickstart/backend/python/01-authorization
@@ -34,7 +39,7 @@ def get_token_auth_header():
         raise AuthError({
             "code": "authorization_header_missing",
             "description": "Authorization header is expected"}, 401)
-    
+
     # split bearer and token
     parts = auth.split()
 
@@ -49,7 +54,7 @@ def get_token_auth_header():
         raise AuthError({
             "code": "invalid_header",
             "description": "Token not found"}, 401)
-    
+
     elif len(parts) > 2:
         raise AuthError({
             "code": "invalid_header",
@@ -59,24 +64,31 @@ def get_token_auth_header():
     token = parts[1]
     return token
 
+
 '''
 implement check_permissions(permission, payload) method
 https://auth0.com/docs/tokens/access-tokens/validate-access-tokens
 '''
+
+
 def check_permissions(permission, payload):
     # check payload contains permission key
     if 'permissions' not in payload:
         abort(400)
-    # raise an AuthError if the requested permission string is not in the payload permissions array
+    # raise an AuthError if the requested permission string is not in the
+    # payload permissions array
     if permission not in payload['permissions']:
         raise AuthError({
             'code': 'Unauthorized',
             'description': "You don't have access to this resource"}, 403)
     return True
 
+
 '''
 implement verify_decode_jwt(token) method
 '''
+
+
 def verify_decode_jwt(token):
     # Retrieve the public key from Auth0 Discovery endpoint
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
@@ -133,12 +145,16 @@ def verify_decode_jwt(token):
             }, 401)
 
     raise AuthError({
-                'code': 'invalid_header',
+        'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
-            }, 401)
+    }, 401)
+
+
 '''
 implement @requires_auth(permission) decorator method
 '''
+
+
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
@@ -149,7 +165,7 @@ def requires_auth(permission=''):
                 payload = verify_decode_jwt(token)
                 # else:
                 # payload = {}
-            except:
+            except BaseException:
                 abort(401)
 
             check_permissions(permission, payload)
