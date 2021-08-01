@@ -82,8 +82,8 @@ The frontend is using HTML, CSS, and Javascript with Bootstrap 3(https://getboot
 ## API Reference
 
 ### Project Host
-    - Heroku: #TODO
-    - Localhost: https://localhost:5000/
+- Heroku: [#TODO]
+- Localhost: [https://localhost:5000/]
 
 ### Roles and Permissions
 - Roles:
@@ -98,27 +98,27 @@ The frontend is using HTML, CSS, and Javascript with Bootstrap 3(https://getboot
         - Add or delete a movie from the database
 
 ### Endpoints
-Get '/movies'
-    - Fetch all the movies 
-    - Roles Permission: Public to all three roles
-    - Sample response: `curl -H "Authorization: Bearer <Token>" http://127.0.0.1:5000/movies`
-    ```
+Get `'/movies'`
+* Fetch all the movies 
+* Roles Permission: Public to all three roles
+* Sample response: `curl -H "Authorization: Bearer <Token>" http://127.0.0.1:5000/movies`
+```
+{
+"movies": [
     {
-    "movies": [
-        {
-            "genres": "Animation",
-            "id": 1,
-            "name": "WALL-E2",
-            "release_date": "Tue, 17 Jun 2008 00:00:00 GMT"
-        },
-        {
-            "genres": "Drama",
-            "id": 11,
-            "name": "Test",
-            "release_date": "Tue, 17 Jun 2008 00:00:00 GMT"
-        }
-    ],
-    "success": true
+        "genres": "Animation",
+        "id": 1,
+        "name": "WALL-E2",
+        "release_date": "Tue, 17 Jun 2008 00:00:00 GMT"
+    },
+    {
+        "genres": "Drama",
+        "id": 11,
+        "name": "Test",
+        "release_date": "Tue, 17 Jun 2008 00:00:00 GMT"
     }
-    ```
+],
+"success": true
+}
+```
 
