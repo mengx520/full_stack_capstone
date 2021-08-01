@@ -50,7 +50,6 @@ With Postgres running, restore a database using the casting_agency.psql file pro
 
 ```
 createdb casting_agency
-psql casting_agency < casting_agency.psql
 ```
 Populating database schema
 ```
@@ -74,6 +73,17 @@ flask run
 python -m unittest tests.test_app
 ```
 
+#### Heroku setup
+
+The following commands will create and configure the Heroku application, and initialize the database.
+
+```
+git remote add heroku https://git.heroku.com/casting-agency-xiaohan.git
+heroku addons:create heroku-postgresql:hobby-dev --app casting-agency-xiaohan
+heroku config --app casting-agency-xiaohan
+git push heroku master
+heroku run bash heroku_db_setup.sh --app casting-agency-xiaohan
+```
 
 ### Frontend Dependencies
 The frontend is using HTML, CSS, and Javascript with Bootstrap 3(https://getbootstrap.com/docs/3.4/customize/). All frontend dependencies are installed in static/, there is no need to install additional files locally.
@@ -82,7 +92,7 @@ The frontend is using HTML, CSS, and Javascript with Bootstrap 3(https://getboot
 ## API Reference
 
 ### Project Host
-- Heroku: [#TODO]
+- Heroku: [http://casting-agency-xiaohan.herokuapp.com/](http://casting-agency-xiaohan.herokuapp.com/)
 - Localhost: [https://localhost:5000/](https://localhost:5000/)
 
 ### Roles and Permissions
@@ -258,7 +268,7 @@ DELETE `'/movies/1`
 DELETE `'/actors/1`
 * DELETE a actors by providing id
 * Roles permission: Casting Director, Executive Producer
-* Sample response: `curl -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkxCQmh2OTI4OEZRT0NhTmllZnRBRCJ9.eyJpc3MiOiJodHRwczovL3hpYW9oYW4udXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYxMDNhMTA1MGY4NjY0MDA2OTJiZDg5ZiIsImF1ZCI6ImNhc3RpbmdfYWdlbmN5IiwiaWF0IjoxNjI3Nzk0NDczLCJleHAiOjE2Mjc4ODA4NzMsImF6cCI6Ilk5RnF2Wkt2N1hGOEVRd05jdW53OHQxSUpJUDQ3UUQ5Iiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6YWN0b3JzIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyJdfQ.y1sgmm7NZuatxlFAr6S8d_vdOjP2ohTFxaVQxrMCKg7RvZP5XlMU1veMNIUMMmUWkrZhvsvAsfihQWwCHD4zpFydyOGGXSjE7O5V1g_pABGNQxf4OHWOccTGUXzQpXvCq0YWiHuCtxKToTJRm__WKbfSdgR1btpINvLK_vgdMlY-aIGj6gJ6DYub61ZANtWRll_Pc0nE4SNuq1PiFZkcXRKDPLppurdWJIcM-jK3AC_tLl4XIztq74s8bXLIl3HhPEDhRldLf0YxUif-ozgQB7Mz6uTiIqyoSFyq5p5ksa-W4Bb7L7JzDwfBunBn72W528y_MoYjJIF8V2JnGhvw8Q" -X DELETE http://127.0.0.1:5000/actors/5`
+* Sample response: `curl -H "Content-Type: application/json" -H "Authorization: Bearer <TOKEN>" -X DELETE http://127.0.0.1:5000/actors/5`
 ```
 {
   "deleted": 5, 
