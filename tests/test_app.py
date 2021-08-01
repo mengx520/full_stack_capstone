@@ -9,8 +9,8 @@ from unittest.mock import patch
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 
-from app import create_app
-from models import db, migrate, Movies, Actors
+from casting_agency.app import create_app
+from casting_agency.models import db, migrate, Movies, Actors
 
 TEST_CONFIG = {
     'TESTING': True,
@@ -116,7 +116,7 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     '''Test for getting movies succeed'''
     # https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch
-    @patch('auth.verify_decode_jwt', return_value=ASSISTANT_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=ASSISTANT_PAYLOAD)
     def test_get_movies(self, mock):
         res = self.client.get('/movies', headers=TEST_HEADERS)
         data = json.loads(res.data)
@@ -126,7 +126,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(len(data['movies']), 1)
 
     '''test getting movies failure due to movie not found'''
-    @patch('auth.verify_decode_jwt', return_value=ASSISTANT_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=ASSISTANT_PAYLOAD)
     def test_404_if_movie_does_not_exist(self, mock):
         res = self.client.get('/movies/1000', headers=TEST_HEADERS)
         data = json.loads(res.data)
@@ -135,7 +135,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
 
     '''test creating movie succeed'''
-    @patch('auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
     def test_create_movie(self, mock):
         res = self.client.post(
             '/movies',
@@ -149,7 +149,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertTrue(data['total_movies'])
 
     '''test creating actor failed due to no permission '''
-    @patch('auth.verify_decode_jwt', return_value=NOPERM_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=NOPERM_PAYLOAD)
     def test_creating_actor_failed_no_permision(self, mock):
         res = self.client.post(
             '/actors',
@@ -161,7 +161,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
 
     '''test creating movie failed missing information'''
-    @patch('auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
     def test_422_movie_creation_failure(self, mock):
         res = self.client.post('/movies', json={}, headers=TEST_HEADERS)
         data = json.loads(res.data)
@@ -169,7 +169,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 422)
 
     '''test editing movies succeed'''
-    @patch('auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
     def test_editing_movies(self, mock):
         res = self.client.patch(
             '/movies/1',
@@ -181,7 +181,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
 
     '''test editing movies failed due to no permission'''
-    @patch('auth.verify_decode_jwt', return_value=ASSISTANT_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=ASSISTANT_PAYLOAD)
     def test_editing_movie_failed_permission_denied(self, mock):
         res = self.client.patch(
             'movies/1',
@@ -193,7 +193,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
 
     '''test delete movies succeed'''
-    @patch('auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
     def test_delete_movies(self, mock):
         res = self.client.delete('/movies/1', headers=TEST_HEADERS)
 
@@ -204,7 +204,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['deleted'], 1)
 
     '''test delete movies failed movie not found'''
-    @patch('auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
     def test_delete_movie_not_found(self, mock):
         res = self.client.delete('/movies/100000', headers=TEST_HEADERS)
 
@@ -214,7 +214,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
 
     '''test getting actor succeed'''
-    @patch('auth.verify_decode_jwt', return_value=ASSISTANT_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=ASSISTANT_PAYLOAD)
     def test_get_actors(self, mock):
         res = self.client.get('/actors', headers=TEST_HEADERS)
         data = json.loads(res.data)
@@ -224,7 +224,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertTrue(len(data['actors']))
 
     '''test getting actor failed'''
-    @patch('auth.verify_decode_jwt', return_value=ASSISTANT_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=ASSISTANT_PAYLOAD)
     def test_404_if_actor_does_not_exist(self, mock):
         res = self.client.get('/actors/1000', headers=TEST_HEADERS)
         data = json.loads(res.data)
@@ -233,7 +233,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
 
     '''test creating actors succeed'''
-    @patch('auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
     def test_creating_actor(self, mock):
         res = self.client.post(
             '/actors',
@@ -245,7 +245,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
 
     '''test creating actor failed due to missing information'''
-    @patch('auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
     def test_422_actor_creation_failure(self, mock):
         res = self.client.post('/actors', json={}, headers=TEST_HEADERS)
         data = json.loads(res.data)
@@ -253,7 +253,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 422)
 
     '''test editing actors succeed'''
-    @patch('auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
     def test_editing_actors(self, mock):
         res = self.client.patch(
             '/actors/1',
@@ -265,7 +265,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
 
     '''test editing actors failed due to no permission'''
-    @patch('auth.verify_decode_jwt', return_value=NOPERM_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=NOPERM_PAYLOAD)
     def test_editing_actors_failed_permission_denied(self, mock):
         res = self.client.patch('actors/1', json=self.edited_actor, headers={})
         data = json.loads(res.data)
@@ -274,7 +274,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
 
     '''test delete actors succeed'''
-    @patch('auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
     def test_delete_actors(self, mock):
         res = self.client.delete('/actors/1', headers=TEST_HEADERS)
         data = json.loads(res.data)
@@ -283,7 +283,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
 
     '''test delete actors failed movie not found'''
-    @patch('auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=PRODUCER_PAYLOAD)
     def test_delete_actors_not_found(self, mock):
         res = self.client.delete('/actors/100000', headers=TEST_HEADERS)
         data = json.loads(res.data)
@@ -292,7 +292,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
 
     '''test delete actors failed due to invalid header'''
-    @patch('auth.verify_decode_jwt', return_value=NOPERM_PAYLOAD)
+    @patch('casting_agency.auth.verify_decode_jwt', return_value=NOPERM_PAYLOAD)
     def test_delete_actors_invalid_header(self, mock):
         res = self.client.delete('/actors/1', headers={})
         data = json.loads(res.data)

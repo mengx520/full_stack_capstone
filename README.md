@@ -55,6 +55,7 @@ psql casting_agency < casting_agency.psql
 Populating database schema
 ```
 export DB_STRING=postgresql://<user>:<pass>@localhost:5432/<databasename>
+export FLASK_APP=casting_agency.app
 flask db init
 flask db migrate -m "Initial migration."
 flask db upgrade
@@ -63,15 +64,14 @@ flask db upgrade
 **4. Run the development server:**
 ```
 export DB_STRING=postgresql://<user>:<pass>@localhost:5432/<databasename>
-export FLASK_APP=app
+export FLASK_APP=casting_agency.app
 export FLASK_ENV=development # enables debug mode
 flask run
 ```
 
 **5. Testing**
 ```
-createdb test_casting_agency
-psql test_casting_agency < test_casting_agency.psql
+python -m unittest tests.test_app
 ```
 
 

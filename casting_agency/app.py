@@ -5,9 +5,9 @@ from sqlalchemy.sql.operators import endswith_op
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-from auth import AuthError, requires_auth
-from models import db, migrate, Movies, Actors
-from config import CastingAgencyConfig
+from .auth import AuthError, requires_auth
+from .models import db, migrate, Movies, Actors
+from .config import CastingAgencyConfig
 
 
 def create_app(test_config=None):
