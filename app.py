@@ -19,10 +19,6 @@ def create_app():
   db.init_app(app)
   migrate.init_app(app, db)
 
-  '''
-  Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
-  '''
-
   CORS(app)
 
   '''
@@ -106,6 +102,7 @@ def create_app():
         }), 200
 
       except:
+        raise
         return jsonify({
             'success': False,
             'message': 'An error occured'

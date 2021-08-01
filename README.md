@@ -62,6 +62,7 @@ flask db upgrade
 
 **4. Run the development server:**
 ```
+export DB_STRING=postgresql://<user>:<pass>@localhost:5432/<databasename>
 export FLASK_APP=app
 export FLASK_ENV=development # enables debug mode
 flask run
@@ -77,4 +78,47 @@ psql test_casting_agency < test_casting_agency.psql
 ### Frontend Dependencies
 The frontend is using HTML, CSS, and Javascript with Bootstrap 3(https://getbootstrap.com/docs/3.4/customize/). All frontend dependencies are installed in static/, there is no need to install additional files locally.
 
+
+## API Reference
+
+### Project Host
+    - Heroku: #TODO
+    - Localhost: https://localhost:5000/
+
+### Roles and Permissions
+- Roles:
+    - Casting Assistant: 
+        - Can view actors and movies
+    - Casting Director:
+        - All permissions a Casting Assistant has and…
+        - Add or delete an actor from the database
+        - Modify actors or movies
+    - Executive Producer:
+        - All permissions a Casting Director has and…
+        - Add or delete a movie from the database
+
+### Endpoints
+Get '/movies'
+    - Fetch all the movies 
+    - Roles Permission: Public to all three roles
+    - Sample response: `curl -H "Authorization: Bearer <Token>" http://127.0.0.1:5000/movies`
+    ```
+    {
+    "movies": [
+        {
+            "genres": "Animation",
+            "id": 1,
+            "name": "WALL-E2",
+            "release_date": "Tue, 17 Jun 2008 00:00:00 GMT"
+        },
+        {
+            "genres": "Drama",
+            "id": 11,
+            "name": "Test",
+            "release_date": "Tue, 17 Jun 2008 00:00:00 GMT"
+        }
+    ],
+    "success": true
+    }
+    ```
 
